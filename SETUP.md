@@ -15,7 +15,7 @@ In general, assume that all commands in this setup are case-sensitive.
 ```sh
 # GitHub username or organization name (change from wikidatabib)
 OWNER=wikidatabib
-# Repository name (change from bib, if desired)
+# Repository name
 REPO=bib
 ```
 
@@ -84,13 +84,36 @@ A vscode window for notes will appear on your screen.
 It has some categories and links, but don't worry about that just now. 
 You can check the [USAGE.md](./USAGE.md) file for instructions on that.
 
-
 The file has been created under the `notes` folder. 
 Save it, and come back to the terminal. 
 
-On the terminal, you may now run "./wlog", which will commit your reading, and push it to GitHub.
+On the terminal, you may now run `./wlog`, which will commit your reading, and push it to GitHub.
 
- 
+
+On your GitHub settings, set GitHub pages to run from "main/docs" and save:
+
+```bash
+xdg-open https://github.com/$OWNER/$REPO/settings/pages
+```
+
+After a short time, you should be able to access your dashboard already via GitHub pages, at `$OWNER.github.io/$REPO`. 
+
+ ```bash
+ xdg-open https://$OWNER.github.io/$REPO
+ ```
+
+Sometimes there is a bug on GH Pages and you'll have to wait for the initial page to show up. 
+It should be fixed with time. 
+
+Your dashboard will nevertheless be available quickly at
+
+ ```bash
+ xdg-open https://$OWNER.github.io/$REPO/index.html
+ ```
+
+# Continue reading
+
+The SETUP is done! To know how you can actually use WikidataBib effectively, please check the [USAGE.md](./USAGE.md) file for instructions.
 
 # Credit
 
