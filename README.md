@@ -1,3 +1,5 @@
+<img src="./images/logo.png" alt="logo" width="600"/>
+
 # Wikidata Bib - Literature Manager and dashboard
 
 This repo is a propotype for bibliography management using Wikidata. 
