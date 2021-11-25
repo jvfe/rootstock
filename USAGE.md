@@ -62,12 +62,10 @@ The code `./pop` will look for the first Q-ID in the `toread.md` and process it 
 It will also remove the Q-ID from the file, so you can advance in your reading articles.
 
 
-
-
-
 # Sections to add
 
 - Reading a paper with Wikidata Bib
 - Adding an article to Wikidata
 - Tagging and retrieving content. 
 - Adding a new list via ./wadd and SPARQL queries
+- Adding multiple new lists via wadd_all

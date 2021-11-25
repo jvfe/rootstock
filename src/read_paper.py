@@ -4,25 +4,24 @@ import sys
 from helper import wikidata2df
 from mdutils.mdutils import MdUtils
 import pandas as pd
-import urllib.parse
 import os.path
 import rdflib
 from datetime import date, datetime
-import wbib.queries
 
 
 def main():
     def get_title_df(wikidata_id):
         query = (
             """
-        SELECT ?item ?itemLabel ?date ?doi
+        SELECT ?item ?itemLabel ?date ?doi ?url
         WHERE
         {
         VALUES ?item {wd:"""
             + wikidata_id
             + """}
         OPTIONAL {?item wdt:P577 ?date}.
-        OPTIONAL {?item wdt:P356 ?doi} 
+        OPTIONAL {?item wdt:P356 ?doi} .
+        OPTIONAL {?item wdt:P953 ?url}
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
         }
         """
@@ -32,7 +31,7 @@ def main():
 
         return df
 
-    def create_markdown(file_path, title, publication_date="None", doi=""):
+    def create_markdown(file_path, title, publication_date="None", doi="", url=""):
         mdFile = MdUtils(file_name=file_path, title=title)
 
         mdFile.new_line("  [@wikidata:" + wikidata_id + "]")
@@ -57,21 +56,34 @@ def main():
         )
         if doi != "":
             mdFile.new_line(f" * [DOI](https://doi.org/{doi})")
+
+        if url != "":
+            mdFile.new_line(f" * [Full text URL]({url})")
         mdFile.new_line()
         mdFile.create_md_file()
 
     def update_turtle(wikidata_id):
         g = rdflib.Graph()
         result = g.parse("read.ttl", format="ttl")
-        wb = rdflib.Namespace("https://wikidatabib.wiki.opencura.com/wiki/")
+        wb = rdflib.Namespace("https://github.com/lubianat/wikidata_bib/tree/main/")
+        wbn = rdflib.Namespace(
+            "https://github.com/lubianat/wikidata_bib/tree/main/notes/"
+        )
         wd = rdflib.Namespace("http://www.wikidata.org/entity/")
+
+        s = rdflib.term.URIRef(wd + wikidata_id)
+        p1 = rdflib.term.URIRef(wb + "has_notes")
+        o1 = rdflib.term.URIRef(wbn + wikidata_id + ".md")
+        g.add((s, p1, o1))
+
+        g.serialize(destination="read.ttl", format="turtle")
 
         today = date.today()
         d1 = today.strftime("+%Y-%m-%dT00:00:00Z/11")
         s = rdflib.term.URIRef(wd + wikidata_id)
-        p = rdflib.term.URIRef(wb + "Property:P2")
-        o = rdflib.term.Literal(d1)
-        g.add((s, p, o))
+        p2 = rdflib.term.URIRef(wb + "read_in")
+        o2 = rdflib.term.Literal(d1)
+        g.add((s, p2, o2))
 
         g.serialize(destination="read.ttl", format="turtle")
 
@@ -106,10 +118,15 @@ def main():
         doi = ""
         pass
 
+    try:
+        text_url = df["url"][0]
+    except:
+        text_url = ""
+        pass
     file_path = "notes/" + wikidata_id
 
     print("======= Creating markdown =======")
-    create_markdown(file_path, title, publication_date, doi)
+    create_markdown(file_path, title, publication_date, doi, text_url)
     update_turtle(wikidata_id)
 
     print("======= Updating dashboard =======")

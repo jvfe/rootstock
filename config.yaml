@@ -9,3 +9,8 @@ lists:
 # - shortcut: Title of header in toread.md  
   main: Main Articles
   other: Other
+queries:
+  main:
+   - https://w.wiki/4T2P # Articles about Wikidata published in eLife
+  other:
+   - https://w.wiki/4T2W # Articles about Wikidata in 2021 with at least 01 female author
